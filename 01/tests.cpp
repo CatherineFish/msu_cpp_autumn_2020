@@ -37,16 +37,6 @@ void ErrorCase_2()
 {
     Allocator test_allocator = Allocator();
     char *mymemory;
-    mymemory = test_allocator.alloc(100);
-    assert(mymemory == nullptr);
-    return;
-}
-
-
-void ErrorCase_3()
-{
-    Allocator test_allocator = Allocator();
-    char *mymemory;
     test_allocator.makeAllocator(1000);
     mymemory = test_allocator.alloc(1001);
     assert(mymemory == nullptr);
@@ -58,6 +48,16 @@ void ErrorCase_3()
     test_allocator.makeAllocator(1);
     mymemory = test_allocator.alloc(1);
     assert(mymemory != nullptr);
+    return;
+}
+
+
+void ErrorCase_3()
+{
+    Allocator test_allocator = Allocator();
+    char *mymemory;
+    mymemory = test_allocator.alloc(100);
+    assert(mymemory == nullptr);
     return;
 }
 
