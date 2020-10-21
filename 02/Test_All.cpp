@@ -1,25 +1,27 @@
 #include "TokenParser.h"
+
 #include "TestFunc.h"
+
 #include "DefaultFunc.h"
+
 #include <cassert>
+
 #include <string>
+
 #include <iostream>
 
 
-void Default()
-{
+void Default() {
     TokenParser MyParser;
     std::string input = "Word \r Number HI \t 567 78\n";
     std::string test_output = MyParser.InputParser(input);
     std::string res_output = "Start parsing\rParsered word is Word\rParsered word is Number\rParsered word is HI\r"
-        "Parsered number is 567\rParsered number is 78\rFinish parsing\r";
+    "Parsered number is 567\rParsered number is 78\rFinish parsing\r";
     assert(test_output == res_output);
     return;
 }
 
-
-void Test()
-{
+void Test() {
     TokenParser MyParser;
     MyParser.SetStartCallback(Start_test);
     MyParser.SetFinishCallback(Finish_test);
@@ -28,14 +30,12 @@ void Test()
     std::string input = "word \r number HI \t 4 15\n";
     std::string test_output = MyParser.InputParser(input);
     std::string res_output = "Extraordinary Start parsing\rdoubleword = wordword\rdoubleword = numbernumber\rdoubleword = HIHI\r"
-        "Word ** 2 = 16\rWord ** 2 = 225\rExtraordinary Finish parsing\r";
+    "Word ** 2 = 16\rWord ** 2 = 225\rExtraordinary Finish parsing\r";
     assert(test_output == res_output);
     return;
 }
 
-
-void Defolt_And_Test()
-{
+void Defolt_And_Test() {
     TokenParser MyParser;
     MyParser.SetStartCallback(Start_test);
     MyParser.SetFinishCallback(Finish_test);
@@ -46,18 +46,15 @@ void Defolt_And_Test()
     std::string input = "word \r number HI \t 4 15\n";
     std::string test_output = MyParser.InputParser(input);
     std::string res_output = "Start parsing\rParsered word is word\rParsered word is number\rParsered word is HI\r"
-        "Word ** 2 = 16\rWord ** 2 = 225\rExtraordinary Finish parsing\r";
+    "Word ** 2 = 16\rWord ** 2 = 225\rExtraordinary Finish parsing\r";
     assert(test_output == res_output);
     return;
 }
 
-
-
-int main(void)
-{
-	//Default();
+int main(void) {
+    //Default();
     Test();
     Defolt_And_Test();
     std::cout << "Success!\n";
-	return 0;
+    return 0;
 }
