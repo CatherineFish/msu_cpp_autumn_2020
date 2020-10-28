@@ -10,10 +10,21 @@ Matrix::Matrix(size_t row, size_t column): row_(row), column_(column) {
     }
 }
 
-Matrix & Matrix::operator = (const Matrix & elem) {
+Matrix::Matrix(const Matrix & elem) {
     row_ = elem.row_;
     column_ = elem.column_;
-    buffer_ = elem.buffer_;
+    buffer_ = new int * [row_];
+    for (size_t i = 0; i < row_; i++) {
+        buffer_[i] = new int[column_];
+        for (size_t j = 0; j < column_; j++) {
+            buffer_[i][j] = elem.buffer_[i][j];
+        }
+    }
+}
+
+Matrix & Matrix::operator = (const Matrix & elem) {
+    this -> ~Matrix();
+    new(this) Matrix(elem);
     return *this;
 }
 
@@ -94,7 +105,14 @@ Matrix::~Matrix() {
 
 ProxyMatrix::ProxyMatrix(size_t col_n, int * col): col_n_(col_n), col_(col) {}
 
-int & ProxyMatrix::operator[](size_t ind) const {
+const int & ProxyMatrix::operator[](size_t ind) const {
+    if (ind >= col_n_) {
+        throw std::out_of_range("Column Index");
+    }
+    return col_[ind];
+}
+
+int & ProxyMatrix::operator[](size_t ind) {
     if (ind >= col_n_) {
         throw std::out_of_range("Column Index");
     }

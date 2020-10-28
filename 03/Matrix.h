@@ -7,7 +7,8 @@ class ProxyMatrix {
     int * col_;
     public:
         ProxyMatrix(size_t col_n, int * col);
-    int & operator[](size_t ind) const;
+    int & operator[](size_t ind);
+    const int & operator[](size_t ind) const;
     ~ProxyMatrix();
 };
 
@@ -16,6 +17,7 @@ class Matrix {
     int ** buffer_;
     public:
         Matrix(size_t row = 7, size_t column = 5);
+    Matrix(const Matrix & elem);
     size_t getRows() const;
     size_t getColumns() const;
     ProxyMatrix operator[](size_t index) const;
