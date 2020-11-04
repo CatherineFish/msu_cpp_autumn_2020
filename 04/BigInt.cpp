@@ -46,7 +46,6 @@ BigInt::BigInt(const std::string & str, size_t size) {
             real_size_--;
             i++;
         }
-
     }
     while (new_size < real_size) {
         new_size *= 2;
@@ -151,9 +150,7 @@ BigInt BigInt::operator * (const BigInt & mul) const {
         if (i != (mul.real_size_ - 1)) {
             for (size_t j = result.real_size_ + 1; j >= 1; j--) {
                 result.number_[j] = result.number_[j - 1];
-
             }
-
             result.number_[0] = 0;
             result.real_size_ += 1;
         }
@@ -198,10 +195,11 @@ bool BigInt::operator == (const BigInt & other) const {
     if (real_size_ != other.real_size_ || sign_ != other.sign_) {
         return false;
     }
-    for (size_t i = 0; i < real_size_; i++)
+    for (size_t i = 0; i < real_size_; i++) {
         if (number_[i] != other.number_[i]) {
             return false;
         }
+    }
     return true;
 }
 
@@ -293,16 +291,18 @@ BigInt::BigInt(const BigInt & copied, size_t real_size) {
 }
 
 BigInt & BigInt::operator = (const BigInt & copied) {
-    if (this == & copied)
+    if (this == & copied) {
         return *this;
+    }
     unsigned int * data = new unsigned int[copied.size_];
     real_size_ = copied.real_size_;
     size_ = copied.size_;
     sign_ = copied.sign_;
     delete[] number_;
     number_ = data;
-    for (size_t i = 0; i < real_size_; i++)
+    for (size_t i = 0; i < real_size_; i++) {
         number_[i] = copied.number_[i];
+    }
     return *this;
 }
 
@@ -316,8 +316,9 @@ BigInt::BigInt(BigInt && moved): size_(moved.size_),
     }
 
 BigInt & BigInt::operator = (BigInt && moved) {
-    if (this == & moved)
+    if (this == & moved) {
         return *this;
+    }
     size_ = std::move(moved.size_);
     real_size_ = std::move(moved.real_size_);
     sign_ = std::move(moved.sign_);
