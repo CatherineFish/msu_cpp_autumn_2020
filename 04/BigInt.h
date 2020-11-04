@@ -10,7 +10,7 @@ class BigInt {
     bool sign_ = true;
     public:
         BigInt(int val = 0);
-    BigInt(std::string str, size_t size = 0);
+    BigInt(const std::string & str, size_t size = 0);
     friend std::ostream & operator << (std::ostream & ostream,
         const BigInt & num);
     BigInt operator + (const BigInt & add) const;

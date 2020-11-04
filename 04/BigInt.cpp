@@ -32,18 +32,28 @@ BigInt::BigInt(int val) {
     }
 }
 
-BigInt::BigInt(std::string str, size_t size) {
+BigInt::BigInt(const std::string & str, size_t size) {
     size_t new_size = 1, real_size = size ? size : str.length();
     real_size_ = real_size;
-    if (!size && str != "" && str[0] == '-') {
-        real_size_--;
-        sign_ = false;
+    size_t i = 0;
+    if (!size && str != "") {
+        if (str[i] == '-') {
+            i++;
+            real_size_--;
+            sign_ = false;
+        }
+        while (str[i] == '0' && real_size_ > 1) {
+            real_size_--;
+            i++;
+        }
+
     }
     while (new_size < real_size) {
         new_size *= 2;
     }
     number_ = new unsigned int[new_size];
     size_ = new_size;
+    number_[0] = 0;
     if (str != "") {
         for (size_t i = 0; i < real_size_; i++) {
             number_[i] = str[real_size - i - 1] - '0';
@@ -51,7 +61,9 @@ BigInt::BigInt(std::string str, size_t size) {
     } else {
         std::fill(number_, number_ + real_size_, 0);
     }
-
+    if (real_size_ == 1 && number_[0] == 0) {
+        sign_ = true;
+    }
 }
 
 std::ostream & operator << (std::ostream & ostream,
@@ -72,7 +84,8 @@ BigInt BigInt::operator + (const BigInt & add) const {
     BigInt result("0", std::max(real_size_, add.real_size_));
     unsigned int add_im = 0, cur_res;
     for (size_t i = 0; i < result.real_size_; i++) {
-        cur_res = (i < real_size_ ? number_[i] : 0) + (i < add.real_size_ ? add.number_[i] : 0) + add_im;
+        cur_res = (i < real_size_ ? number_[i] : 0) +
+            (i < add.real_size_ ? add.number_[i] : 0) + add_im;
         if (cur_res < 10) {
             result.number_[i] = cur_res;
             add_im = 0;
@@ -110,7 +123,7 @@ BigInt BigInt::SubWithOrder(const BigInt & minuend,
     const BigInt & sub) const {
     BigInt result(minuend);
     unsigned int sub_im = 0, cur_res, cur;
-    for (size_t i = 0; i < real_size_; i++) {
+    for (size_t i = 0; i < result.real_size_; i++) {
         cur = sub_im + (i < sub.real_size_ ? sub.number_[i] : 0);
         cur_res = result.number_[i];
         if (cur_res < cur) {
@@ -122,11 +135,9 @@ BigInt BigInt::SubWithOrder(const BigInt & minuend,
         cur_res -= cur;
         result.number_[i] = cur_res;
     }
-
     while (result.number_[result.real_size_ - 1] == 0) {
         result.real_size_--;
     }
-
     return result;
 }
 
@@ -172,7 +183,6 @@ BigInt BigInt::operator * (unsigned int mul) const {
         result.number_[result.real_size_ - 1] = add_mul;
     }
     return result;
-
 }
 
 BigInt BigInt::operator - () const {
@@ -296,13 +306,14 @@ BigInt & BigInt::operator = (const BigInt & copied) {
     return *this;
 }
 
-BigInt::BigInt(BigInt && moved): size_(moved.size_), real_size_(moved.real_size_), sign_(moved.sign_) {
-    number_ = moved.number_;
-    moved.number_ = nullptr;
-    moved.size_ = 0;
-    moved.real_size_ = 0;
-    moved.sign_ = true;
-}
+BigInt::BigInt(BigInt && moved): size_(moved.size_),
+    real_size_(moved.real_size_), sign_(moved.sign_) {
+        number_ = moved.number_;
+        moved.number_ = nullptr;
+        moved.size_ = 0;
+        moved.real_size_ = 0;
+        moved.sign_ = true;
+    }
 
 BigInt & BigInt::operator = (BigInt && moved) {
     if (this == & moved)
@@ -310,6 +321,7 @@ BigInt & BigInt::operator = (BigInt && moved) {
     size_ = std::move(moved.size_);
     real_size_ = std::move(moved.real_size_);
     sign_ = std::move(moved.sign_);
+    delete[] number_;
     number_ = moved.number_;
     moved.number_ = nullptr;
     moved.size_ = 0;
