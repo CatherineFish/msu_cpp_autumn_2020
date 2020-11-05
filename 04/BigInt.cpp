@@ -144,15 +144,20 @@ BigInt BigInt::operator * (const BigInt & mul) const {
     if ( * this == 0 || mul == 0) {
         return BigInt();
     }
-    BigInt result("", real_size_ + mul.real_size_);
+    BigInt result("", real_size_ + mul.real_size_ + 1);
     for (size_t i = 0; i < mul.real_size_; i++) {
         result = result + ( * this * mul.number_[mul.real_size_ - 1 - i]);
         if (i != (mul.real_size_ - 1)) {
-            for (size_t j = result.real_size_ + 1; j >= 1; j--) {
-                result.number_[j] = result.number_[j - 1];
+            bool flag = false;
+            for (size_t j = 0; j < result.real_size_; j++) {
+                if (!flag && result.number_[result.real_size_ - 1 - j]) {
+                    flag = true;
+                }
+                if (flag) {
+                    result.number_[result.real_size_ - j] = result.number_[result.real_size_ - 1 - j];
+                    result.number_[result.real_size_ - 1 - j] = 0;
+                }
             }
-            result.number_[0] = 0;
-            result.real_size_ += 1;
         }
     }
     if (sign_ != mul.sign_)
@@ -166,8 +171,8 @@ BigInt BigInt::operator * (const BigInt & mul) const {
 BigInt BigInt::operator * (unsigned int mul) const {
     BigInt result("", real_size_ + 1);
     unsigned int add_mul = 0, cur;
-    for (size_t i = 0; i < real_size_; i++) {
-        cur = number_[i] * mul + add_mul;
+    for (size_t i = 0; i < result.real_size_; i++) {
+        cur = (i < real_size_ ? number_[i] : 0) * mul + add_mul;
         if (cur > 10) {
             result.number_[i] = cur % 10;
             add_mul = cur / 10;
