@@ -1,7 +1,7 @@
 #include <iostream>
 
 
-#include <string.h>
+#include <string>
 
 
 Serializer::Serializer(std::ostream & out): out_(out) {}
@@ -39,7 +39,6 @@ Error Serializer::process_saving(bool val) {
         return Error::CorruptedArchive;
     }
     return Error::NoError;
-
 }
 
 template < class T >

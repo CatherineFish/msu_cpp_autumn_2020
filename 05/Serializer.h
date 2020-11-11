@@ -29,22 +29,16 @@ class Deserializer {
 private:
     template < class ArgsT >
         Error process(ArgsT && val);
-
     template < class T, class...ArgsT >
         Error process(T && val, ArgsT && ...args);
-
     Error process_loading(uint64_t & val);
     Error process_loading(bool & val);
-
 public:
     explicit Deserializer(std::istream & in );
-
     template < class T >
         Error load(T & object);
-
     template < class...ArgsT >
         Error operator()(ArgsT && ...args);
-
 };
 
 #include "Serializer.tpp"
