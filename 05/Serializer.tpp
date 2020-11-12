@@ -21,6 +21,12 @@ template < class T, class...ArgsT >
         }
     }
 
+template < class T >
+    Error Serializer::process_saving(T val) {
+        return Error::CorruptedArchive;
+    }
+
+
 Error Serializer::process_saving(uint64_t val) {
     out_ << val << Separator;
     if (out_.fail()) {
@@ -67,6 +73,12 @@ template < class T, class...ArgsT >
             return er;
         }
     }
+
+template < class T >
+    Error Deserializer::process_loading(T val) {
+        return Error::CorruptedArchive;
+    }
+
 
 Error Deserializer::process_loading(uint64_t & val) {
     std::string text;

@@ -18,6 +18,20 @@ struct Data {
         }
 };
 
+struct WrongData {
+    int64_t a;
+    std::string b;
+    template < class Serializer >
+        Error serialize(Serializer & serializer) {
+            return serializer(a, b);
+        }
+    template < class Deserializer >
+        Error deserialize(Deserializer & deserializer) {
+            return deserializer(a, b);
+        }
+};
+
+
 void DefaultTest() {
     Data x {
         1,
@@ -51,7 +65,6 @@ void ErrorTest() {
     Deserializer deserializer(stream);
     const Error err = deserializer.load(x);
     assert(err == Error::CorruptedArchive);
-    return;
 }
 
 int main(void) {

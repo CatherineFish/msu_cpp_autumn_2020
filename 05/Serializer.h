@@ -13,6 +13,8 @@ private:
         Error process(ArgsT && val);
     template < class T, class...ArgsT >
         Error process(T && val, ArgsT && ...args);
+    template < class T > 
+		Error process_saving(T val);
     Error process_saving(uint64_t val);
     Error process_saving(bool val);
 public:
@@ -31,6 +33,8 @@ private:
         Error process(ArgsT && val);
     template < class T, class...ArgsT >
         Error process(T && val, ArgsT && ...args);
+    template < class T >
+   		Error process_loading(T val);
     Error process_loading(uint64_t & val);
     Error process_loading(bool & val);
 public:
