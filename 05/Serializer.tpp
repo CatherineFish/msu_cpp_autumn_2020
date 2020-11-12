@@ -85,7 +85,7 @@ Error Deserializer::process_loading(uint64_t & val) {
     in_ >> text;
     try {
         val = std::stoull(text);
-    } catch (const std::invalid_argument & exp) {
+    } catch (const std::logic_error& exp) {
         return Error::CorruptedArchive;
     }
     return Error::NoError;
@@ -110,5 +110,5 @@ template < class T >
 
 template < class...ArgsT >
     Error Deserializer::operator()(ArgsT && ...args) {
-        return process(args...);
+        return process(std::forward < ArgsT > (args)...);
     }
