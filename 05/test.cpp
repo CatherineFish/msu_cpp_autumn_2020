@@ -18,19 +18,6 @@ struct Data {
         }
 };
 
-struct WrongData {
-    int64_t a;
-    std::string b;
-    template < class Serializer >
-        Error serialize(Serializer & serializer) {
-            return serializer(a, b);
-        }
-    template < class Deserializer >
-        Error deserialize(Deserializer & deserializer) {
-            return deserializer(a, b);
-        }
-};
-
 
 void DefaultTest() {
     Data x {
