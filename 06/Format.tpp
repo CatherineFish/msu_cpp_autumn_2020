@@ -2,7 +2,7 @@
 
 #include <sstream>
 
-template < class...ArgsT > std::string format(const std::string & str_, ArgsT && ...args) {
+template < class...ArgsT > std::string format(const std::string & str_, const ArgsT & ...args) {
     std::string result;
     std::string in_str = str_;
     size_t in_start;
@@ -36,7 +36,7 @@ template < class...ArgsT > std::string format(const std::string & str_, ArgsT &&
 }
 
 template < class T, class...ArgsT >
-    std::string search_elem(size_t search_pos, T && val, ArgsT && ...args) {
+    std::string search_elem(size_t search_pos, const T & val, const ArgsT & ...args) {
         if (search_pos) {
             return search_elem(search_pos - 1, args...);
         }
@@ -46,7 +46,7 @@ template < class T, class...ArgsT >
     }
 
 template < class T >
-    std::string search_elem(size_t search_pos, T && val) {
+    std::string search_elem(size_t search_pos, const T & val) {
         if (search_pos) {
             throw TooFewArguments();
         }
