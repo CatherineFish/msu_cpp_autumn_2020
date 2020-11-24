@@ -262,21 +262,6 @@ template < class T, class Alloc = MyAllocator < T >>
             }
             throw std::invalid_argument("Error");
         }
-
-        void push_back(const T & value) {
-            if (size_ + 1 > capacity_) {
-                size_type capacity = capacity_ ? capacity_ * 2 : 1;
-                T * data = alloc_.allocate(capacity);
-                for (size_t i = 0; i < size_; i++) {
-                    data_[i] = data[i];
-                }
-                alloc_.deallocate(data_);
-                data_ = data;
-                capacity_ = capacity;
-            }
-            data_[size_] = value;
-            size_++;
-        }
         
         void pop_back() {
             if (!empty()) {
@@ -322,18 +307,34 @@ template < class T, class Alloc = MyAllocator < T >>
             return MyReverseIterator < Vector < T, Alloc > , T > (data_);
         }
 
+        void copy_path (size_type capacity, size_type size)
+        {
+        	T * data = alloc_.allocate(capacity);
+            for (size_t i = 0; i < size; i++) {
+                data[i] = std::move(data_[i]);
+            }
+            alloc_.deallocate(data_);
+            data_ = data;
+            return;	
+        }
+
+        void push_back(const T & value) {
+            if (size_ + 1 > capacity_) {
+                size_type capacity = capacity_ ? capacity_ * 2 : 1;
+                this->copy_path(capacity, size_);
+                capacity_ = capacity;
+            }
+            data_[size_] = std::move(value);
+            size_++;
+        }
+
         void resize(size_type count) {
             size_type capacity = count ? 1 : 0;
             while (capacity < count) {
                 capacity *= 2;
             }
-            T * data = alloc_.allocate(capacity);
             size_t min_ = count < size_ ? count : size_;
-            for (size_t i = 0; i < min_; i++) {
-                data[i] = data_[i];
-            }
-            alloc_.deallocate(data_);
-            data_ = data;
+            this->copy_path(capacity, min_);
             size_ = count;
             capacity_ = capacity;
         }
@@ -342,13 +343,8 @@ template < class T, class Alloc = MyAllocator < T >>
             if (count < size_) {
                 throw std::invalid_argument("Error");
             }
-            T * data = alloc_.allocate(count);
-            for (size_t i = 0; i < size_; i++) {
-                data[i] = data_[i];
-            }
-            alloc_.deallocate(data_);
+            this->copy_path(count, size_);
             capacity_ = count;
-            data_ = data;
         }
 
         size_type capacity() const noexcept {

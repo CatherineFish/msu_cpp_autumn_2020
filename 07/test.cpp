@@ -51,6 +51,22 @@ void DefaultTest() {
 
     b.reserve(56);
     assert(b.capacity() == 56);
+
+    Vector < double > d(3, 78.9);
+    d.push_back(5.5);
+    d.push_back(5.5);
+    d.push_back(5.5);
+    d.push_back(5.5);
+    d.push_back(5.5);
+    d.push_back(5.5);
+    assert(d.size() == 9 && d.capacity() == 16);
+    for (size_t i = 0; i < d.size(); i++) {
+        if (i < 3) {
+            assert(d[i] == 78.9);
+        } else {
+            assert(d[i] == 5.5);
+        }
+    }
     return;
 }
 
